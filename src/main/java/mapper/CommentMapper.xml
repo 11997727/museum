@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.CommentMapper">
+    <select id="selectAllComments" resultType="entity.Comment">
+        select * from comment where museumId = #{museumId} order by commentDate desc limit #{start}, #{length}
+    </select>
+
+    <select id="selectCommentsCount" parameterType="Integer" resultType="Integer">
+        select count(*) from comment where museumId = #{museumId}
+    </select>
+
+    <insert id="insertOneComment" parameterType="entity.Comment">
+        insert into comment (content, commentDate, phoneNum, museumId) values (#{content}, now(), #{phoneNum}, #{museumId})
+    </insert>
+</mapper>

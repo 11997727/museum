@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.MuseumMapper">
+    <resultMap id="museumMap" type="entity.Museum">
+        <id property="museumId" column="museumId"/>
+        <!--
+        <association property="orderNum" column="museumId" select="mapper.OrderMapper.selectOrdersCount"/>
+        -->
+    </resultMap>
+
+    <select id="selectAllMuseums" resultType="entity.Museum">
+        select * from museum
+
+        <if test="districtIds != null">
+            where districtId in
+
+            <foreach collection="districtIds" separator="," open="(" close=")" item="d">
+                ${d}
+            </foreach>
+        </if>
+
+        limit #{start}, #{length}
+    </select>
+
+    <select id="selectMuseumsByList" resultType="entity.Museum">
+        select * from museum where museumId in
+
+        <foreach collection="museumIds" separator="," open="(" close=")" item="m">
+            ${m}
+        </foreach>
+    </select>
+
+    <select id="selectMuseumsCount" resultType="Integer">
+        select count(*) from museum
+
+        <if test="districtIds != null">
+            where districtId in
+
+            <foreach collection="districtIds" separator="," open="(" close=")" item="d">
+                ${d}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectMuseumById" parameterType="Integer" resultType="entity.Museum">
+        select * from museum where museumId = #{museumId}
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.OrderMapper">
+    <resultMap id="orderMap" type="entity.Order">
+        <id column="orderId" property="orderId"/>
+        <association property="museum" column="museumId" select="mapper.MuseumMapper.selectMuseumById"/>
+    </resultMap>
+
+    <select id="selectOrdersCount" resultType="Integer">
+        select count(*) from `order` where visitDate = date(#{visitDate}) and museumId = #{museumId}
+
+        <if test="phoneNum != null and phoneNum != ''">
+            and phoneNum = #{phoneNum}
+        </if>
+    </select>
+
+    <select id="selectCountsByGroup" resultType="Map">
+        select museumId, count(*) as count from `order` where visitDate = date(#{visitDate}) and museumId in
+
+        <foreach collection="museumIds" item="m" separator="," open="(" close=")">
+            #{m}
+        </foreach>
+
+        group by museumId
+    </select>
+
+    <insert id="insertOneOrder">
+        insert into `order` (museumId, phoneNum, visitDate) values (#{museumId}, #{phoneNum}, #{visitDate})
+    </insert>
+
+    <select id="selectOrdersByPhone" parameterType="String" resultMap="orderMap">
+        select * from `order` where visitDate &gt;= date(now())
+    </select>
+
+    <delete id="deleteAllOrders">
+        delete from `order` where orderId in
+
+        <foreach collection="orderIds" item="o" open="(" close=")" separator=",">
+            #{o}
+        </foreach>
+    </delete>
+</mapper>
