@@ -17,7 +17,7 @@
     <!-- Spring版本号 -->
     <spring.version>4.3.8.RELEASE</spring.version>
     <aspectj.version>1.8.0</aspectj.version>
-    <jackson.version>2.5.4</jackson.version>
+    <jackson.version>2.11.0</jackson.version>
   </properties>
 
   <dependencies>
